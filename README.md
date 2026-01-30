@@ -8,17 +8,29 @@ Gpu: a100
 
 ### Steps followed:
 
-#### 1. Create a virtual environment for reproducibility 
+#### 1. Load python
+```{bash}
+$ module load python/3.11.11
+```
+I loaded 3.11.11 becuase it might work better for yolov12. And we can check if we have this version in Nova by doing module avail python.
+
+#### 2. Create a virtual environment for reproducibility 
 
 At first navigate to YOLOv12 directory in Nova via VS-code terminal. Then create yolov12 virtual environment as:
 
 ```{bash}
-python -m venv yolov12
+$ python -m venv --copies yolov12env
 ```
 #### 2. Activate the virtual environment
 ```{bash}
-source /work/dsrosero/bacharya/YOLOv12/yolov12/bin/activate
+$ source /work/dsrosero/bacharya/YOLOv12/yolov12/bin/activate
 ```
-#### 3. Download the requirement.txt file from YOLOv12 GitHub repository : https://github.com/sunsmarterjie/yolov12 
+#### 3. Download the requirement.txt file in YOLOv12 directory from YOLOv12 GitHub repository : https://github.com/sunsmarterjie/yolov12 
 
 The requirment.txt has python dependencies used for training the v12 model. So, I want to use the same versions for compatibility. 
+
+Now, install all listed dependencies in requirements.txt as:
+
+```{bash}
+$ pip install -r requirements.txt
+```
