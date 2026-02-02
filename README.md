@@ -1,4 +1,4 @@
-## YOLOv12 for object detection
+## YOLOv12 for object detection      (2/2/2026)
 
 ### Install YOLOv12 in Nova
 
