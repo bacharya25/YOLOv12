@@ -91,5 +91,45 @@ This installation take around 3-4 minutes. Be patient.
 Then I cancelled the allocated enviroment to save resources, because I am ready to work via VS-code now. Follow the steps below.
 
 #### Used Nova via remote tunnel connection to local VS-code interface. Refer to my "InstallGroundedSAM2inNova" repository for details to connect VS code to Nova using a registered tunnel
+After nova is connected to VS-code via remote tunnel do as below:
+
+### Open reqired directory from Nova on VS-code running on Nova compute node
+
+#### 1. Click on the "Explore" or "command + shift + E " , then navigate to the desired directory and click enter.
+
+#### 2. Open the .ipynb file you want to work on.
+
+### Activate "yoloenv" virtual environment and select correct python kernel
+
+To run the code cells , we should select the correct kernel. Please follow the steps below:
+
+#### 1. Go to terminal and activate the "yoloenv" virtual environment.
+```{bash}
+source /path to directory that has gsam2 environment/yoloenv/bin/activate
+```
+If you also see "base", then your conda may be active, so use code:
+
+```{bash}
+conda deactivate
+```
+```{bash}
+exit
+```
+```{bash}
+source /path to directory that has gsam2 environment/yoloenv/bin/activate
+```
+#### 2. Then, "Select kernel" present on the upper right side of the VS-code interface . Then click "Jupyter Environments", you will see something like (Python)(yoloenv)(Python 3.11.11) based on the name of your virtual environemnt and the python version you have. Select it. If you do not see your gsam2 enviroment then go to step 3.
+
+#### 3. In such cases, you will need to install then register your kernel fist. Go to terminal from step 1. Then use code :
+
+```{bash}
+pip install jupyter kernel
+```
+```bash
+python -m ipykernel install --user --name yoloenv --display-name "Python (yoloenv)"
+```
+then , ctrl+shift_p , type reload window. Then select Jupyter environmnets, then something like (yoloenv)(Python 3.11.11).
+
+Now, we are ready to run code (.ipynb file).
 
 
