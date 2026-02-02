@@ -1,36 +1,95 @@
 ## YOLOv12 for object detection
 
-Used Nova via remote tunnel connection to local VS-code interface. Refer to "Installation   " for details on connection.
+### Install YOLOv12 in Nova
 
-Path to YOLOv12 object detection folder: "/work/dsrosero/bacharya/YOLOv12"
-Code used: yolov12Baseline.ipynb
-Gpu: a100
-
-### Steps followed:
-
-#### 1. Load python
+#### 1. Go to your work directory
 ```{bash}
-$ module load python/3.11.11
+$ cd /......path to your work directory....
 ```
-I loaded 3.11.11 becuase it might work better for yolov12. And we can check if we have this version in Nova by doing module avail python.
-
-#### 2. Create a virtual environment for reproducibility 
-
-At first navigate to YOLOv12 directory in Nova via VS-code terminal. Then create yolov12 virtual environment as:
-
+I did:
 ```{bash}
-$ python -m venv --copies yolov12env
+$ cd /work/dsroser/bacharya/YOLOv12
 ```
-#### 2. Activate the virtual environment
+#### 2. Request compute node
 ```{bash}
-$ source /work/dsrosero/bacharya/YOLOv12/yolov12/bin/activate
+$ salloc --nodes=1 --gres=gpu:a100:1 --ntasks-per-node=16 --mem=32G --time=02:00:00
 ```
-#### 3. Download the requirement.txt file in YOLOv12 directory from YOLOv12 GitHub repository : https://github.com/sunsmarterjie/yolov12 
+Gives the interactive shell session to run commands directly.
 
-The requirment.txt has python dependencies used for training the v12 model. So, I want to use the same versions for compatibility. 
+#### 3. Load the cluster-managed required versions of required softwares (CUDA, Python, FFmpeg, and Git) into current shell session, making them ready to use.
+```{bash}
+$ module load cuda/11.8 python/3.11.11 ffmpeg git
+```
+To prevent version mismatch, I am using python 3.11.11, and CUDA version: 11.8. These are compatible with YOLOv12 than newer versions of cuda and python.
 
-Now, install all listed dependencies in requirements.txt as:
+#### 4. Create a Python Virtual Environment
+```{bash}
+$ python -m venv --copies yoloenv
+```
+Creates an isolated Python environment named yoloenv with copied Python binaries in currect directory, allowing safe installation of packages without affecting the system Python.
+This is needed on clusters or HPC systems to avoid permission or path issues.
 
+#### 5. Activate the Python Virtual Environment
+```{bash}
+$ source yoloenv/bin/activate
+```
+Activates the yoloenv virtual environment so that Python and packages installed there are used in the current session. Any packages installed after this will be installed in the virtual environment yoloenv. This ensures isolation and reproducibility.
+
+Inside the virtual environment yoloenv,
+
+#### 6. Install setup tools
+```{bash}
+$ pip install --upgrade pip setuptools wheel
+```
+#### 7. Install compatible torch, torchvision and torchaudio
+$ pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+#### 8. Clone the official yOLOv12 Repository
+```{bash}
+$ git clone https://github.com/sunsmarterjie/yolov12.git
+```
+Clones the yOLOv12 repository from GitHub into the current working directory, creating a copy of all files and history for use on the cluster.
+
+#### 7. Change Directory to yolov12 Folder
+```{bash}
+$ cd yolov12
+```
+Navigates into the yolov12 folder (downloaded from git) inside the YOLOv12 folder.
+
+#### 8. Install all requirements
+
+To prevent the mismatch between the torch, torchvision, which were downloaded manually as above, I commented out them from requiremets.txt . Also, since, I will be working on Nova, I am not using falsh-attention, actually flash-attention is targeted for running in local machine, in Nova it is creating errors due to unavialability of setup wheels. 
+The requirements.txt I used looks like below:
+```{bash}
+#torch==2.2.2 
+#torchvision==0.17.2
+#flash_attn-2.7.3+cu11torch2.2cxx11abiFALSE-cp311-cp311-linux_x86_64.whl
+timm==1.0.14
+albumentations==2.0.4
+onnx==1.14.0
+onnxruntime==1.15.1
+pycocotools==2.0.7
+PyYAML==6.0.1
+scipy==1.13.0
+onnxslim==0.1.31
+onnxruntime-gpu==1.18.0
+gradio==4.44.1
+opencv-python==4.9.0.80
+psutil==5.9.8
+py-cpuinfo==9.0.0
+huggingface-hub==0.23.2
+safetensors==0.4.3
+numpy==1.26.4
+supervision==0.22.0
+```
+And it is installed as:
 ```{bash}
 $ pip install -r requirements.txt
 ```
+This installation take around 3-4 minutes. Be patient.
+
+Then I cancelled the allocated enviroment to save resources, because I am ready to work via VS-code now. Follow the steps below.
+
+#### Used Nova via remote tunnel connection to local VS-code interface. Refer to my "InstallGroundedSAM2inNova" repository for details to connect VS code to Nova using a registered tunnel
+
+
